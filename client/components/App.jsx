@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Row from './Row';
 import GameList from './GameList';
 import Leaders from './Leaders';
+import {Switch, Route, Routes } from 'react-router-dom';
 
 let gameStore = [];
 
@@ -18,26 +19,26 @@ function getInitialState() {
   };
 }
 
-function checkWin(rows) {
-  const combos = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-  ];
+// function checkWin(rows) {
+//   const combos = [
+//     [0, 1, 2],
+//     [3, 4, 5],
+//     [6, 7, 8],
+//     [0, 4, 8],
+//     [2, 4, 6],
+//     [0, 3, 6],
+//     [1, 4, 7],
+//     [2, 5, 8],
+//   ];
 
-  const flattened = rows.reduce((acc, row) => acc.concat(row), []);
+//   const flattened = rows.reduce((acc, row) => acc.concat(row), []);
 
-  return combos.find(combo => (
-    flattened[combo[0]] !== '' &&
-    flattened[combo[0]] === flattened[combo[1]] &&
-    flattened[combo[1]] === flattened[combo[2]]
-  ));
-}
+//   return combos.find(combo => (
+//     flattened[combo[0]] !== '' &&
+//     flattened[combo[0]] === flattened[combo[1]] &&
+//     flattened[combo[1]] === flattened[combo[2]]
+//   ));
+// }
 
 class App extends Component {
   constructor(props) {
@@ -73,28 +74,31 @@ class App extends Component {
       <Row key={i} row={i} letters={letters} handleClick={handleClick} />
     ));
 
-    let infoDiv;
-    if (winner) {
-      let winTurn = turn === 'X' ? 'O' : 'X';
-      infoDiv = (
-        <div>
-          <div>Player {winTurn} wins with squares {winner.join(', ')}!</div>
-        </div>
-      );
-    } else {
-      infoDiv = <div>Turn: {turn}</div>;
-    }
+    // let infoDiv;
+    // if (winner) {
+    //   let winTurn = turn === 'X' ? 'O' : 'X';
+    //   infoDiv = (
+    //     <div>
+    //       <div>Player {winTurn} wins with squares {winner.join(', ')}!</div>
+    //     </div>
+    //   );
+    // } else {
+    //   infoDiv = <div>Turn: {turn}</div>;
+    // }
 
     return (
-      <div>
-        {infoDiv}
-        <div id="board">
-          {rowElements}
+      <Routes>
+        <div>
+          {infoDiv}
+          <div id="board">
+            {rowElements}
+          </div>
+          <button id="reset" onClick={() => this.setState(getInitialState())}>Reset board</button>
+          <GameList gameList={gameList} />
+          <Leaders />
         </div>
-        <button id="reset" onClick={() => this.setState(getInitialState())}>Reset board</button>
-        <GameList gameList={gameList} />
-        <Leaders />
-      </div>
+        
+      </Routes>
     );
   }
 }

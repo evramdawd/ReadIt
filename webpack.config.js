@@ -2,25 +2,29 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: process.NODE_ENV,
+  mode: process.env.NODE_ENV,
   entry: {
     index: './client/index.js'
-  },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, '/'),
-    },
   },
   output: {
     filename: 'bundle.js',
     publicPath: '/build',
     path: path.resolve(__dirname, 'build')
   },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, '/'),
+    },
+    proxy: {
+      '/api/**': 'http://localhost:3000',
+      '/load': 'http://localhost:3000',
+    }
+  },
   module: {
     rules: [
       {
         test: /\.jsx?/, 
-        exclude: /node_modules/,
+        exclude: /node_modules/, // put parenthesis around node modules like google_doc? /(node_modules)/
         use: {
           loader: 'babel-loader',
           options: { 
@@ -44,5 +48,14 @@ module.exports = {
       }
     ]
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Development',
+      template: 'index.html'
+    }),
+  ],
+  resolve: {
+    // Enable importing JS / JSX files without specifying their extension
+    extensions: ['.js', '.jsx'],
+  }
 };
