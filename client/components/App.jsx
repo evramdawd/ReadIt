@@ -1,78 +1,42 @@
 import React, { Component } from 'react';
-import Row from './Row';
-import GameList from './GameList';
-import Leaders from './Leaders';
-import {Switch, Route, Routes } from 'react-router-dom';
 
-let gameStore = [];
+import { Switch, Route, Routes } from 'react-router-dom';
 
-function getInitialState() {
-  return {
-    rows: [
-      ['', '', ''],
-      ['', '', ''],
-      ['', '', ''],
-    ],
-    turn: 'X',
-    winner: undefined,
-    gameList: gameStore,
-  };
-}
-
-// function checkWin(rows) {
-//   const combos = [
-//     [0, 1, 2],
-//     [3, 4, 5],
-//     [6, 7, 8],
-//     [0, 4, 8],
-//     [2, 4, 6],
-//     [0, 3, 6],
-//     [1, 4, 7],
-//     [2, 5, 8],
-//   ];
-
-//   const flattened = rows.reduce((acc, row) => acc.concat(row), []);
-
-//   return combos.find(combo => (
-//     flattened[combo[0]] !== '' &&
-//     flattened[combo[0]] === flattened[combo[1]] &&
-//     flattened[combo[1]] === flattened[combo[2]]
-//   ));
-// }
+import MainContainer from './MainContainer';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.state = getInitialState();
+    // this.handleClick = this.handleClick.bind(this);
+    // this.state = getInitialState();
   }
   
-  handleClick(row, square) {
-    let { turn, winner } = this.state;
-    const { rows } = this.state;
-    const squareInQuestion = rows[row][square];
+  // handleClick(row, square) {
+  //   let { turn, winner } = this.state;
+  //   const { rows } = this.state;
+  //   const squareInQuestion = rows[row][square];
 
-    if (this.state.winner) return;
-    if (squareInQuestion) return;
+  //   if (this.state.winner) return;
+  //   if (squareInQuestion) return;
 
-    rows[row][square] = turn;
-    turn = turn === 'X' ? 'O' : 'X';
-    winner = checkWin(rows);
+  //   rows[row][square] = turn;
+  //   turn = turn === 'X' ? 'O' : 'X';
+  //   winner = checkWin(rows);
 
-    this.setState({
-      rows,
-      turn,
-      winner,
-    });
-  }
+  //   this.setState({
+  //     rows,
+  //     turn,
+  //     winner,
+  //   });
+  // }
 
   render() {
-    const { rows, turn, winner, gameList } = this.state;
-    const handleClick = this.handleClick;
+    // const { rows, turn, winner, gameList } = this.state;
+    // const handleClick = this.handleClick;
 
-    const rowElements = rows.map((letters, i) => (
-      <Row key={i} row={i} letters={letters} handleClick={handleClick} />
-    ));
+    // const rowElements = rows.map((letters, i) => (
+    //   <Row key={i} row={i} letters={letters} handleClick={handleClick} />
+    // ));
 
     // let infoDiv;
     // if (winner) {
@@ -88,7 +52,11 @@ class App extends Component {
 
     return (
       <Routes>
-        <div>
+        <Route 
+          path='/'
+          element={ <MainContainer />}
+        />
+        {/* <div>
           {infoDiv}
           <div id="board">
             {rowElements}
@@ -96,8 +64,7 @@ class App extends Component {
           <button id="reset" onClick={() => this.setState(getInitialState())}>Reset board</button>
           <GameList gameList={gameList} />
           <Leaders />
-        </div>
-        
+        </div> */}
       </Routes>
     );
   }

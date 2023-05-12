@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { param } = require('../routes/api');
+// const { param } = require('../routes/api');
 
 const pool = new Pool({
   host: 'localhost',

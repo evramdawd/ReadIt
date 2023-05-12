@@ -18,11 +18,11 @@ fileController.initialLoad = async (req, res, next) => {
 
     // Parsing the JSON User Data and saving the array of objects under data.children to "savedArray"
     const parsedData = JSON.parse(saved);
-    console.log('parsedData: ', parsedData);
+    // console.log('parsedData: ', parsedData);
     const savedArray = parsedData.data.children;
     console.log('SAVED ARRAY LENGTH: ', savedArray.length);
 
-    // Will need to DELETE everything in DB upon every refresh of the page right?
+    // DELETE everything in DB upon every refresh of the page:
     await db.query('DELETE from saved;');
     await db.query('ALTER SEQUENCE saved_id_seq RESTART WITH 1;');
     await db.query('UPDATE saved SET id=nextval(\'saved_id_seq\');');
@@ -35,19 +35,21 @@ fileController.initialLoad = async (req, res, next) => {
     for(let i = 0; i < savedArray.length; i++) {
       query.values = [savedArray[i]];
       console.log('CHECK ME: !!!!!!');
-      let response = await db.query(query);
+      await db.query(query);
     }
 
+    let text = 'SELECT data -> \'data\' ->> \'id\' AS post_id,data -> \'data\' ->> \'subreddit_name_prefixed\' AS subreddit, data -> \'data\' ->> \'link_title\' AS link_title, data -> \'data\' ->> \'title\' AS title, data -> \'data\' ->> \'subreddit_name_prefixed\' AS subreddit,data -> \'data\' ->> \'author\' AS author, data -> \'data\' ->> \'created_utc\' AS created, data -> \'data\' ->> \'thumbnail\' AS thumbnail, data -> \'data\' ->> \'permalink\' AS url, data -> \'data\' ->> \'score\' AS score, data -> \'data\' ->> \'selftext\' AS text FROM saved;'
+
     // displaying the result of populating the DB above:
-    db.query('SELECT * FROM saved', (error, results) => {
-      if (error) { throw error}
+    const response = await db.query(text);
+    console.log('THIS IS THE REAL QUERY SON!');
+    console.log('RESPONSE.ROWS.length: ', response.rows.length)
+    console.log('RESPONSE.ROWS[0]', response.rows[0]);
 
-      console.log('RESULTS.ROWS: ', results.rows);
-      // response.status(200)
-    })
-
-    // Playing around with querying the DB to find what we need for the website (e.g. title, subreddit, author, etc.)
-    // db.query()
+    // console.log('RESPONSE.ROWS: ', response.rows);
+    res.locals.posts = response.rows;
+    console.log(typeof res.locals.posts);
+    console.log(Array.isArray(res.locals.posts));
 
     return next();
   }

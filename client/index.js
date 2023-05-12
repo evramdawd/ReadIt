@@ -8,7 +8,7 @@ import styles from './scss/application.scss';
 
 render(
   <BrowserRouter>
-    <App />,
+    <App />
   </BrowserRouter>,
   document.getElementById('root')
 );
